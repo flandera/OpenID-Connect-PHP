@@ -149,6 +149,11 @@ class OpenIDConnectClient
      */
     private $idToken;
 
+	/**
+	 * @var int
+	 */
+	private $expiresIn;
+
     /**
      * @var string stores the token response
      */
@@ -316,6 +321,9 @@ class OpenIDConnectClient
 
                 // Save the refresh token, if we got one
                 if (isset($token_json->refresh_token)) $this->refreshToken = $token_json->refresh_token;
+
+				// Save the expiration, if we got one
+				if (isset($token_json->expires_in)) $this->expiresIn = $token_json->expires_in;
 
                 // Success!
                 return true;
@@ -1312,6 +1320,13 @@ class OpenIDConnectClient
         return $this->idToken;
     }
 
+	/**
+	 * @return int
+	 */
+	public function getExpiresIn() {
+		return $this->expiresIn;
+	}
+
     /**
      * @return array
      */
@@ -1352,7 +1367,7 @@ class OpenIDConnectClient
      * @param string $nonce
      * @return string
      */
-    protected function setNonce($nonce) {
+    public function setNonce($nonce) {
         $_SESSION['openid_connect_nonce'] = $nonce;
         return $nonce;
     }
@@ -1362,7 +1377,7 @@ class OpenIDConnectClient
      *
      * @return string
      */
-    protected function getNonce() {
+    public function getNonce() {
         return $_SESSION['openid_connect_nonce'];
     }
 
@@ -1381,7 +1396,7 @@ class OpenIDConnectClient
      * @param string $state
      * @return string
      */
-    protected function setState($state) {
+    public function setState($state) {
         $_SESSION['openid_connect_state'] = $state;
         return $state;
     }
@@ -1391,7 +1406,7 @@ class OpenIDConnectClient
      *
      * @return string
      */
-    protected function getState() {
+    public function getState() {
         return $_SESSION['openid_connect_state'];
     }
 
