@@ -1384,7 +1384,7 @@ class OpenIDConnectClient
      * @return string
      */
     public function getNonce() {
-        return $_SESSION['openid_connect_nonce'];
+        return isset($_SESSION['openid_connect_nonce']) ? $_SESSION['openid_connect_nonce'] : NULL;
     }
 
     /**
@@ -1413,7 +1413,7 @@ class OpenIDConnectClient
      * @return string
      */
     public function getState() {
-        return $_SESSION['openid_connect_state'];
+        return isset($_SESSION['openid_connect_state']) ? $_SESSION['openid_connect_state'] : NULL;
     }
 
     /**
