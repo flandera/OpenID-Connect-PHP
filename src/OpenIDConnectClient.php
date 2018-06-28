@@ -733,6 +733,18 @@ class OpenIDConnectClient
         $token_params = http_build_query($token_params, null, '&');
 
         $json = json_decode($this->fetchURL($token_endpoint, $token_params, $headers));
+
+
+		// TODO: dodelat checky viz useCode()
+        // Throw an error if the server returns one
+		if (isset($json->error)) {
+			if (isset($json->error_description)) {
+				throw new OpenIDConnectClientException($json->error_description);
+			}
+			throw new OpenIDConnectClientException('Got response: ' . $json->error);
+		}
+
+
         $this->accessToken = $json->access_token;
 
         if (isset($json->refresh_token)) {
