@@ -711,6 +711,7 @@ class OpenIDConnectClient
      */
     public function refreshToken($refresh_token) {
         $token_endpoint = $this->getProviderConfigValue("token_endpoint");
+		$token_endpoint_auth_methods_supported = $this->getProviderConfigValue("token_endpoint_auth_methods_supported", ['client_secret_basic']);
 
         $grant_type = "refresh_token";
 
@@ -721,10 +722,17 @@ class OpenIDConnectClient
             'client_secret' => $this->clientSecret,
         );
 
+		// Consider Basic authentication if provider config is set this way
+		$headers = [];
+		if (in_array('client_secret_basic', $token_endpoint_auth_methods_supported)) {
+			$headers = ['Authorization: Basic ' . base64_encode($this->clientID . ':' . $this->clientSecret)];
+			unset($token_params['client_secret']);
+		}
+
         // Convert token params to string format
         $token_params = http_build_query($token_params, null, '&');
 
-        $json = json_decode($this->fetchURL($token_endpoint, $token_params));
+        $json = json_decode($this->fetchURL($token_endpoint, $token_params, $headers));
         $this->accessToken = $json->access_token;
 
         if (isset($json->refresh_token)) {
