@@ -346,8 +346,8 @@ class OpenIDConnectClient
 			throw new OpenIDConnectClientException("Unable to determine state");
 		}
 
-		// Cleanup state
-		$this->unsetState();
+		// this line causes "Unable to determine state" error when logging subsequently in multiple windows
+		// $this->unsetState();
 
 		if (!property_exists($token_json, 'id_token')) {
 			throw new OpenIDConnectClientException("User did not authorize openid scope.");
@@ -370,8 +370,8 @@ class OpenIDConnectClient
 		// If this is a valid claim
 		if ($this->verifyJWTclaims($claims, $token_json->access_token)) {
 
-			// Clean up the session a little
-			$this->unsetNonce();
+			// this line causes "Unable to verify JWT claims" error when logging subsequently in multiple windows
+//			$this->unsetNonce();
 
 			// Save the full response
 			$this->tokenResponse = $token_json;
