@@ -284,8 +284,8 @@ class OpenIDConnectClient
                 throw new OpenIDConnectClientException("Unable to determine state");
             }
 
-            // Cleanup state
-            $this->unsetState();
+			// this line causes "Unable to determine state" error when logging subsequently in multiple windows
+//            $this->unsetState();
 
             $claims = $this->decodeJWT($id_token, 1);
 
@@ -304,8 +304,8 @@ class OpenIDConnectClient
             // If this is a valid claim
             if ($this->verifyJWTclaims($claims, $accessToken)) {
 
-                // Clean up the session a little
-                $this->unsetNonce();
+				// this line causes "Unable to determine state" error when logging subsequently in multiple windows
+//                $this->unsetNonce();
 
                 // Save the id token
                 $this->idToken = $id_token;
@@ -317,7 +317,8 @@ class OpenIDConnectClient
                 if ($accessToken) $this->accessToken = $accessToken;
 
                 // Save the refresh token, if we got one
-                if (isset($token_json->refresh_token)) $this->refreshToken = $token_json->refresh_token;
+				// NO - there must not be a refresh token when using implicit flow
+//				if (isset($token_json->refresh_token)) $this->refreshToken = $token_json->refresh_token;
 
                 // Success!
                 return true;
